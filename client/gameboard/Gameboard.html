@@ -1,0 +1,11 @@
+<template name="Gameboard">
+  <table class='gameboard-table'>
+    {{#each rows}}
+      <tr class='gameboard-row'>
+        {{#each columns}}
+          <td class='gameboard-column'></td>
+        {{/each}}
+      </tr>
+    {{/each}}
+  </table>
+</template>
