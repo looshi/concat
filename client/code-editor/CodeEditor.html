@@ -1,6 +1,9 @@
 <template name="CodeEditor">
-  <button class='pure-button'><i class="fa fa-play"></i> Run</button>
+  <button id='run' class='pure-button pure-button-primary'><i class="fa fa-play"></i> Run</button>
   <div class='code-editor-container'>
-    {{> CodeMirror id="#editor" name="editor" options=editorOptions reactiveVar="varName"}}
+    {{> CodeMirror id='editor' name='editor' options=editorOptions reactiveVar='editorCode'}}
+    <div class='error-pane {{#if hasError}}error{{/if}}'>
+      <div class='error-text'>{{instance.error.get}}</div>
+    </div>
   </div>
 </template>

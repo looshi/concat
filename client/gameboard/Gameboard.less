@@ -12,19 +12,23 @@
     width: 18px;
     height: 18px;
     display: inline-block;
+    border: 1px solid #606060;
   }
   .board-color{
     background-color: #ff00cc;
     width: 18px;
     height: 18px;
     display: inline-block;
+    border: 1px solid #606060;
   }
 }
 
 .gameboard-table{
+  transition : all 0.2s ease-out;
   width: 100%;
   max-width: 400px;
   height: 400px;
+  border: 3px solid #606060;
   td,tr{
     margin:0;
     padding:0;
@@ -36,5 +40,9 @@
     background-color: #cc0000;
     width: 2px;
     height: 2px;
+  }
+  &.active-control{
+    border: 3px solid #fff;
+    background-color: #ececec;
   }
 }

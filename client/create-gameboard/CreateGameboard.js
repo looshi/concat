@@ -22,9 +22,8 @@ Template.CreateGameboard.events({
         $('#new-game-error').html('Error, could not create game.');
         console.warn("error", err,res );
       }else{
-        FlowRouter.go('/game/'+res);  // navigate to the new game
+        FlowRouter.go('/game/'+res+'/edit');
       }
-
     });
   },
   'click #cancel-game' : function(e){

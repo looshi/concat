@@ -19,26 +19,10 @@ Template.Gameboard.onCreated(function(){
   self.name = new ReactiveVar('');
 
   self.subscribe('singleGameData', currentGameId, function(){
-    var rows = [];
-    var columns = [];
     var game = Games.findOne(self._id);
-    var gameData = game.data;
-    var count = 0;
-    for(var i=0; i<GRID_SIZE; i++){
-      rows.push(i);
-      columns[i] = [];
-      for(var j=0; j<GRID_SIZE; j++){
-        var cell={
-          row: i,
-          column: j,
-          color: gameData.charAt(count)==='1' ? GRID_COLOR : OBJECT_COLOR
-        }
-        columns[i][j] = cell;
-        count = count + 1;
-     }
-    }
-    self.rows.set(rows);
-    self.columns.set(columns);
+    var board = drawCells(game.data);
+    self.rows.set(board.rows);
+    self.columns.set(board.columns);
     self.name.set(game.name)
     $('body').on('mouseup',function(){self.isMouseDown.set(false)});
     $('body').on('mousedown',function(){self.isMouseDown.set(true)});
@@ -84,6 +68,10 @@ Template.Gameboard.helpers({
   cell: function(row){
     return Template.instance().columns.get()[row];
   },
+  isEditingBoard: function(){
+    var t = Template.instance();
+    return (t.isDrawing.get() || t.isErasing.get())
+  }
 });
 
 var saveGameboard = function(_id){
@@ -103,3 +91,22 @@ var saveGameboard = function(_id){
   })
 }
 
+var drawCells = function(gameData){
+  var count = 0;
+  var rows = [];
+  var columns = [];
+  for(var i=0; i<GRID_SIZE; i++){
+      rows.push(i);
+      columns[i] = [];
+      for(var j=0; j<GRID_SIZE; j++){
+        var cell={
+          row: i,
+          column: j,
+          color: gameData.charAt(count)==='1' ? GRID_COLOR : OBJECT_COLOR
+        }
+        columns[i][j] = cell;
+        count = count + 1;
+     }
+    }
+  return {rows:rows,columns:columns};
+}

@@ -14,7 +14,8 @@ Future = Npm.require('fibers/future');
       name: name,
       public: false,
       created: new Date(),
-      data: ''
+      data: '',
+      solution: '//Enter code here.'
     }
     var gameId = Games.insert(game);
     return gameId;
@@ -27,6 +28,20 @@ Future = Npm.require('fibers/future');
     Games.update({_id:_id},{$set:fields},function(err,res){
       if(err||res===0){
         future.throw('SaveGame error '+err);
+      }else{
+        future.return(res);
+      }
+    });
+    return future.wait();
+  },
+  SaveGameSolution: function(_id, solution){
+    check(_id, String);
+    check(solution, String);
+    var future = new Future();
+    var fields = {solution: solution};
+    Games.update({_id:_id},{$set:fields},function(err,res){
+      if(err||res===0){
+        future.throw('Save Solution error '+err);
       }else{
         future.return(res);
       }

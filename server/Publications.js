@@ -7,6 +7,6 @@ Meteor.publish("singleGameData", function (_id) {
   return Games.find({_id:_id});
 });
 
-Meteor.publish("allGameData", function (_) {
+Meteor.publish("allGameData", function () {
   return Games.find({});
 });
