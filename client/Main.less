@@ -1,11 +1,60 @@
-#home-button{
-  a{
-    text-decoration: none;
+body{
+  padding: 18px;
+  background: #606060;
+  // background-image:url('/CompositionBookCover.jpg')
+}
+
+a,h1,h2,h3,h4,h5,h6,p,div,span{
+  color: #D4D4D4;
+}
+
+.main{
+  background-color: rgba(0, 0, 0, 0.95);
+  padding: 18px;
+  border: 1px solid #ff00cc;
+}
+
+.pure-button{
+  transition : all 0.2s ease-out;
+  border: 3px solid #777;
+  font-size:14px;
+  text-transform: uppercase;
+  margin: 12px;
+  &.pure-button-primary{
+    color: #fff000;
+    background-color: #ff00cc;
+  }
+  &.pure-button-active{
+    border: 3px solid #fff;
+    background-color: #ececec;
   }
 }
 
+a{
+  color: #fff000;
+  background-color: #ff00cc;
+  &:hover{
+    color: #ff00cc;
+    background-color:  #fff000;
+  }
+}
+
+.heading{
+  color:#fff000;
+  background-color:  #ff00cc;
+  width: auto;
+  display: inline-block;
+  margin: 12px 0;
+}
+
+
+.game-list{
+  margin-top: 18px;
+
+}
+
 .button-success {
-    background: rgb(28, 184, 65); /* this is a green */
+    background: #ff00cc; /* this is a green */
 }
 
 .button-error {

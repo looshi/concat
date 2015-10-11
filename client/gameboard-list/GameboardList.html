@@ -1,7 +1,10 @@
 <template name='GameboardList'>
-  {{#each games}}
-    <div class='game-link'>
-      <a href='/game/{{_id}}'>{{name}}</a>
-    </div>
-  {{/each}}
+  <span class='heading'>Play A Challenge : </span>
+  <div class='game-list'>
+    {{#each games}}
+      <div class='game-link'>
+        <a href='/game/{{_id}}/play'>{{name}}</a>
+      </div>
+    {{/each}}
+  </div>
 </template>

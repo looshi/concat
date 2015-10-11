@@ -3,24 +3,31 @@
     cursor: cell;
   }
   &.is-erasing{
-    cursor: grab;
-    cursor: -webkit-grab;
+    // cursor: grab;
+    // cursor: -webkit-grab;
+    cursor: cell;
   }
-  .pure-button{
-    transition : all 0.2s ease-out;
-    border: 2px solid #fff;
-    font-size:12px;
-    text-transform: uppercase;
-    &.pure-button-active{
-      border: 2px solid #ff00cc;
-    }
+  .object-color{
+    background-color: #fff000;
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+  }
+  .board-color{
+    background-color: #ff00cc;
+    width: 18px;
+    height: 18px;
+    display: inline-block;
   }
 }
 
 .gameboard-table{
   td,tr{
-     margin:0;
+    margin:0;
     padding:0;
+  }
+  td{
+    border: 1px solid #C30E9C;
   }
   width: 400px;
   height: 400px;
