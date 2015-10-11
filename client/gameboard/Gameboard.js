@@ -1,9 +1,4 @@
-var BRUSH_SIZE = 2;
-var GRID_COLOR = '#ff00cc';
-var GRID_COLOR_RGB = 'rgb(255, 0, 204)'
-var OBJECT_COLOR = '#fff000';
-var OBJECT_COLOR_RGB = 'rgb(255, 240, 0)';
-var GRID_SIZE = 40;
+
 
 Template.Gameboard.onCreated(function(){
   var currentGameId = FlowRouter.current().params.gameId;
@@ -18,6 +13,7 @@ Template.Gameboard.onCreated(function(){
   self.isEditing = new ReactiveVar(isEditing);
   self.name = new ReactiveVar('');
   self.gameData = new ReactiveVar(null);
+  self.brushSize = new ReactiveVar(4);
 
   self.subscribe('singleGameData', currentGameId, function(){
     var game = Games.findOne(self._id);
@@ -39,13 +35,19 @@ Template.Gameboard.events({
   'mouseover .gameboard-cell, mousedown .gameboard-cell': function(e, template){
     var isDrawing = template.isDrawing.get();
     var isErasing = template.isErasing.get();
+    var BRUSH_SIZE = Number(template.brushSize.get());
     if(template.isMouseDown.get() && (isDrawing || isErasing) ){
       var selector = [];
-      for(var i=this.row-BRUSH_SIZE/2;i<this.row+BRUSH_SIZE;i++){
-        for(var j=this.column-BRUSH_SIZE/2;j<this.column+BRUSH_SIZE;j++){
-          selector.push('#cell-'+i+'-'+j);
+      if(BRUSH_SIZE>1){
+        for(var i=this.row-BRUSH_SIZE/2;i<this.row+BRUSH_SIZE;i++){
+          for(var j=this.column-BRUSH_SIZE/2;j<this.column+BRUSH_SIZE;j++){
+            selector.push('#cell-'+i+'-'+j);
+          }
         }
+      }else{
+        selector.push('#cell-'+this.row+'-'+this.column);
       }
+
       var color = isDrawing? OBJECT_COLOR : GRID_COLOR;
       $(selector.join(', ')).css('background-color',color);
     }
@@ -64,6 +66,10 @@ Template.Gameboard.events({
   'mousedown #eraser': function(e, template){
     template.isErasing.set(!template.isErasing.get());
     template.isDrawing.set(false);
+  },
+  'change #brush-size' : function(e, template) {
+      var selected = $('#brush-size option:selected').val();
+      template.brushSize.set(selected);
   }
 })
 
@@ -80,9 +86,15 @@ Template.Gameboard.helpers({
 var saveGameboard = function(_id, template){
   var board = $('.gameboard-table')[0];
   var data = '';
+  var color;
   for(var i=0;i<board.rows.length;i++){
     for(var j=0;j<board.rows[i].cells.length;j++){
-      data+=board.rows[i].cells[j].style.backgroundColor==OBJECT_COLOR_RGB?'0':'1';
+      color =  board.rows[i].cells[j].style.backgroundColor;
+      if(color==ERROR_COLOR_RGB || color==OBJECT_COLOR || color==OBJECT_COLOR_RGB){
+        data+='0';
+      }else{
+        data+='1';
+      }
     }
   }
   Meteor.call('SaveGameData', _id, data, function(err,res){

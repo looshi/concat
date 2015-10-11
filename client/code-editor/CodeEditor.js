@@ -1,4 +1,4 @@
-var CAT_COLOR_RGB = 'rgb(0, 0, 0)'
+
 var CAT_START_X = 0;
 var CAT_START_Y = 20;
 var POS = {}; // current cat position
@@ -101,7 +101,14 @@ var addMoveFunctions = function(){
 var drawCell = function(x, y, TIMER){
   setTimeout(function(){
     var board = $('.gameboard-table')[0];
-    board.rows[y].cells[x].style.backgroundColor = CAT_COLOR_RGB;
+    var cell = board.rows[y].cells[x];
+    if(cell.style.backgroundColor === OBJECT_COLOR_RGB){
+      console.log("Fail!");
+      board.rows[y].cells[x].style.backgroundColor = ERROR_COLOR_RGB;
+    }else{
+      board.rows[y].cells[x].style.backgroundColor = CAT_COLOR_RGB;
+    }
+
   }, TIMER*10);
 }
 

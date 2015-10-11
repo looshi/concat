@@ -8,6 +8,13 @@
       <button
       class='pure-button {{#if instance.isErasing.get}}active-control{{/if}}'
       id='eraser'><i class="fa fa-pencil"></i> <div class='board-color'></div></button>
+        <label>Brush Size</label>
+        <select id="brush-size">
+          <option value="1">1</option>
+          <option value="2">3</option>
+          <option value="4" selected>4</option>
+          <option value="6">6</option>
+        </select>
     {{/if}}
     <table class='gameboard-table {{#if isEditingBoard}}active-control{{/if}}' cellspacing='0'>
       {{#each instance.rows.get}}
