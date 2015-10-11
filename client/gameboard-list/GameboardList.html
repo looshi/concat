@@ -1,5 +1,7 @@
-<template name="GameboardList">
-  {{#each gameboard}}
-    gameboard
+<template name='GameboardList'>
+  {{#each games}}
+    <div class='game-link'>
+      <a href='/game/{{_id}}'>{{name}}</a>
+    </div>
   {{/each}}
 </template>

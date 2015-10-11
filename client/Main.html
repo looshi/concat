@@ -3,16 +3,21 @@
 </head>
 
 <body>
+  {{> Nav}}
   {{> Main}}
 </body>
 
 <template name="Main">
-  <h1 id='home-button'>Concat</h1>
   {{> Template.dynamic template=content}}
 </template>
 
 <template name="Home">
-  home
   {{> CreateGameboard}}
+  {{> GameboardList}}
 </template>
+
+<template name="Nav">
+  <h1 id='home-button'><a href='/'>Concat</a></h1>
+</template>
+
 
