@@ -23,9 +23,10 @@ Template.Gameboard.onCreated(function(){
     var board = drawCells(game.data);
     self.rows.set(board.rows);
     self.columns.set(board.columns);
-    self.name.set(game.name)
+    self.name.set(game.name);
     $('body').on('mouseup',function(){self.isMouseDown.set(false)});
     $('body').on('mousedown',function(){self.isMouseDown.set(true)});
+    $('body').on('reset', function(){resetBoard(game.data)});
   });
 });
 
@@ -91,6 +92,19 @@ var saveGameboard = function(_id){
   })
 }
 
+var resetBoard = function(gameData){
+  var count = 0;
+  var color;
+  var board = $('.gameboard-table')[0];
+  for(var i=0;i<board.rows.length;i++){
+    for(var j=0;j<board.rows[i].cells.length;j++){
+      color = gameData.charAt(count)==='0' ? OBJECT_COLOR_RGB : GRID_COLOR_RGB;
+      board.rows[i].cells[j].style.backgroundColor=color;
+      count++;
+    }
+  }
+}
+
 var drawCells = function(gameData){
   var count = 0;
   var rows = [];
@@ -102,7 +116,7 @@ var drawCells = function(gameData){
         var cell={
           row: i,
           column: j,
-          color: gameData.charAt(count)==='1' ? GRID_COLOR : OBJECT_COLOR
+          color: gameData.charAt(count)==='0' ? OBJECT_COLOR : GRID_COLOR
         }
         columns[i][j] = cell;
         count = count + 1;

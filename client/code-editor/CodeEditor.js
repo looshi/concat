@@ -1,4 +1,9 @@
+var CAT_COLOR_RGB = 'rgb(0, 0, 0)'
+var CAT_START_X = 0;
+var CAT_START_Y = 20;
+var POS = {}; // current cat position
 Template.CodeEditor.onCreated(function(){
+  POS = {x: CAT_START_X, y: CAT_START_Y};
   Session.set('editorCode', null);
   var currentGameId = FlowRouter.current().params.gameId;
   var self = this;
@@ -10,6 +15,7 @@ Template.CodeEditor.onCreated(function(){
     if(game && game.solution)
       Session.set('editorCode', game.solution);
   });
+  addMoveFunctions();
 })
 
 Template.CodeEditor.onDestroyed(function(){
@@ -29,16 +35,40 @@ Template.CodeEditor.events({
     var remove = 'Meteor|\\$|window|jQuery|document|XMLHttpRequest';
     var regEx = new RegExp(remove, 'gi');
     code = code.replace(regEx, '');
-    console.log(code);
     try{
+      $('body').trigger('reset');
+      POS.x = CAT_START_X;
+      POS.y = CAT_START_Y;
       eval(code);
       template.error.set('Script ran successfully.');
     }catch(err){
       template.error.set('Error '+err);
     }
-
+  },
+  'click #reset': function(){
+    $('body').trigger('reset');
   }
 });
+
+// adds move functions to window context
+var addMoveFunctions = function(){
+  window.R = function(amount){
+    console.log("R executed!", amount, POS);
+
+    for(var i=0; i<amount; i++){
+      drawCell(POS.x, POS.y);
+      POS.x++;
+    }
+
+  }
+}
+
+
+var drawCell = function(x, y){
+  var board = $('.gameboard-table')[0];
+  board.rows[y].cells[x].style.backgroundColor = CAT_COLOR_RGB;
+}
+
 
 Template.CodeEditor.helpers({
   editorOptions: function() {
@@ -46,7 +76,8 @@ Template.CodeEditor.helpers({
   },
   hasError: function(){
     var error = Template.instance().error.get();
-    return error.indexOf('Error')!==-1;
+    if(error)
+      return error.indexOf('Error')!==-1;
   }
 });
 
