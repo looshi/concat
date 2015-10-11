@@ -17,6 +17,7 @@ Template.Gameboard.onCreated(function(){
   self._id = currentGameId;
   self.isEditing = new ReactiveVar(isEditing);
   self.name = new ReactiveVar('');
+  self.gameData = new ReactiveVar(null);
 
   self.subscribe('singleGameData', currentGameId, function(){
     var game = Games.findOne(self._id);
@@ -24,9 +25,10 @@ Template.Gameboard.onCreated(function(){
     self.rows.set(board.rows);
     self.columns.set(board.columns);
     self.name.set(game.name);
+    self.gameData.set(game.data);
     $('body').on('mouseup',function(){self.isMouseDown.set(false)});
     $('body').on('mousedown',function(){self.isMouseDown.set(true)});
-    $('body').on('reset', function(){resetBoard(game.data)});
+    $('body').on('reset', function(){resetBoard(self)});
   });
 });
 
@@ -52,7 +54,7 @@ Template.Gameboard.events({
     var isDrawing = template.isDrawing.get();
     var isErasing = template.isErasing.get();
     if(isDrawing || isErasing)
-      saveGameboard(template._id);
+      saveGameboard(template._id, template);
   },
   'mousedown #brush': function(e, template){
     console.log('brush',template);
@@ -75,12 +77,12 @@ Template.Gameboard.helpers({
   }
 });
 
-var saveGameboard = function(_id){
+var saveGameboard = function(_id, template){
   var board = $('.gameboard-table')[0];
   var data = '';
   for(var i=0;i<board.rows.length;i++){
     for(var j=0;j<board.rows[i].cells.length;j++){
-      data+=board.rows[i].cells[j].style.backgroundColor==GRID_COLOR_RGB?'1':'0';
+      data+=board.rows[i].cells[j].style.backgroundColor==OBJECT_COLOR_RGB?'0':'1';
     }
   }
   Meteor.call('SaveGameData', _id, data, function(err,res){
@@ -88,16 +90,18 @@ var saveGameboard = function(_id){
       console.warn('error saving game',err);
     }else{
        console.log('Game saved!', res);
+       template.gameData.set(data);
     }
   })
 }
 
-var resetBoard = function(gameData){
+var resetBoard = function(self){
+  var gameData = self.gameData.get();
   var count = 0;
   var color;
   var board = $('.gameboard-table')[0];
-  for(var i=0;i<board.rows.length;i++){
-    for(var j=0;j<board.rows[i].cells.length;j++){
+  for(var i=0; i<board.rows.length; i++){
+    for(var j=0; j<board.rows[i].cells.length; j++){
       color = gameData.charAt(count)==='0' ? OBJECT_COLOR_RGB : GRID_COLOR_RGB;
       board.rows[i].cells[j].style.backgroundColor=color;
       count++;
