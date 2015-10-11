@@ -22,4 +22,13 @@
   <h1 id='home-button'><a href='/'>Concat</a></h1>
 </template>
 
-
+<template name="Play">
+  <div class='pure-g'>
+    <div class='pure-u-1-2'>
+      {{> Gameboard}}
+    </div>
+    <div class='pure-u-1-2'>
+      {{> CodeEditor}}
+    </div>
+  </div>
+</template>

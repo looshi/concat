@@ -1,0 +1,6 @@
+<template name="CodeEditor">
+  <button class='pure-button'><i class="fa fa-play"></i> Run</button>
+  <div class='code-editor-container'>
+    {{> CodeMirror id="#editor" name="editor" options=editorOptions reactiveVar="varName"}}
+  </div>
+</template>

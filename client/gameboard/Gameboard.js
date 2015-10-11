@@ -16,7 +16,6 @@ Template.Gameboard.onCreated(function(){
   self.columns = new ReactiveVar(null);
   self._id = currentGameId;
   self.isEditing = new ReactiveVar(isEditing);
-  console.log('isedit',isEditing);
 
   self.subscribe('singleGameData', currentGameId, function(){
     var rows = [];
