@@ -21,3 +21,5 @@ insecure                # Allow all DB writes from clients (for prototyping)
 less
 reactive-var
 kadira:flow-router
+agustino:purecss
+fortawesome:fontawesome

@@ -1,15 +1,23 @@
 <template name="Gameboard">
-  Gameboard
-  <table class='gameboard-table' cellspacing='0'>
-    {{#each rows}}
-      <tr class='gameboard-row'>
-        {{#each cell this}}
-          <td
-          id='cell-{{row}}-{{column}}'
-          class='gameboard-cell'
-          style='background-color:{{color}};'></td>
-        {{/each}}
-      </tr>
-    {{/each}}
-  </table>
+  <div class='gameboard-container {{#if instance.isDrawing.get}}is-drawing{{/if}} {{#if instance.isErasing.get}}is-erasing{{/if}}'>
+    Gameboard
+    <button
+    class='pure-button {{#if instance.isDrawing.get}}pure-button-active{{/if}}'
+    id='brush'><i class="fa fa-pencil"></i> Draw</button>
+    <button
+    class='pure-button {{#if instance.isErasing.get}}pure-button-active{{/if}}'
+    id='eraser'><i class="fa fa-eraser"></i> Erase</button>
+    <table class='gameboard-table' cellspacing='0'>
+      {{#each instance.rows.get}}
+        <tr class='gameboard-row'>
+          {{#each cell this}}
+            <td
+            id='cell-{{row}}-{{column}}'
+            class='gameboard-cell'
+            style='background-color:{{color}};'></td>
+          {{/each}}
+        </tr>
+      {{/each}}
+    </table>
+  </div>
 </template>

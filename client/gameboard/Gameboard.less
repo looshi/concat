@@ -1,10 +1,29 @@
+.gameboard-container{
+  &.is-drawing{
+    cursor: cell;
+  }
+  &.is-erasing{
+    cursor: grab;
+    cursor: -webkit-grab;
+  }
+  .pure-button{
+    transition : all 0.2s ease-out;
+    border: 2px solid #fff;
+    font-size:12px;
+    text-transform: uppercase;
+    &.pure-button-active{
+      border: 2px solid #ff00cc;
+    }
+  }
+}
+
 .gameboard-table{
-  width: 400px;
-  height: 400px;
   td,tr{
      margin:0;
     padding:0;
   }
+  width: 400px;
+  height: 400px;
   .gameboard-cell{
     background-color: #cc0000;
     width: 2px;
