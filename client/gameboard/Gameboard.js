@@ -1,35 +1,44 @@
 var BRUSH_SIZE = 4;
 var GRID_COLOR = '#ff00cc';
+var GRID_COLOR_RGB = 'rgb(255, 0, 204)'
 var OBJECT_COLOR = '#fff000';
+var OBJECT_COLOR_RGB = 'rgb(255, 240, 0)';
+
 Template.Gameboard.onCreated(function(){
-  this.isDrawing = new ReactiveVar(false);
-  this.isErasing = new ReactiveVar(false);
-  this.isMouseDown = new ReactiveVar(false);
-  this.rows = new ReactiveVar(null);
-  this.columns = new ReactiveVar(null);
-  var rows = [];
-  var columns = [];
-  for(var i=0;i<=80;i++){
-    rows.push(i);
-    columns[i] = [];
-    for(var j=0;j<=80;j++){
-      var cell={
-        row: i,
-        column: j,
-        color: '#ff00cc'
-      }
-      columns[i][j] = cell;
-   }
-  }
-  this.rows.set(rows);
-  this.columns.set(columns);
+  var currentGameId = FlowRouter.current().params.gameId;
   var self = this;
-  $('body').on('mouseup',function(){self.isMouseDown.set(false)});
-  $('body').on('mousedown',function(){self.isMouseDown.set(true)});
+  self.subscribe('singleGameData', currentGameId, function(){
+    self.isDrawing = new ReactiveVar(false);
+    self.isErasing = new ReactiveVar(false);
+    self.isMouseDown = new ReactiveVar(false);
+    self.rows = new ReactiveVar(null);
+    self.columns = new ReactiveVar(null);
+    var rows = [];
+    var columns = [];
+    for(var i=0;i<80;i++){
+      rows.push(i);
+      columns[i] = [];
+      for(var j=0;j<80;j++){
+        var cell={
+          row: i,
+          column: j,
+          color: '#ff00cc'
+        }
+        columns[i][j] = cell;
+     }
+    }
+    self.rows.set(rows);
+    self.columns.set(columns);
+    $('body').on('mouseup',function(){self.isMouseDown.set(false)});
+    $('body').on('mousedown',function(){self.isMouseDown.set(true)});
+  });
 });
 
 Template.Gameboard.events({
-  'mouseover .gameboard-cell': function(e, template){
+  'mousedown .gameboard-cell' : function(e, template){
+    template.isMouseDown.set(true);
+  },
+  'mouseover .gameboard-cell, mousedown .gameboard-cell': function(e, template){
     var isDrawing = template.isDrawing.get();
     var isErasing = template.isErasing.get();
     if(template.isMouseDown.get() && (isDrawing || isErasing) ){
@@ -42,6 +51,12 @@ Template.Gameboard.events({
       var color = isDrawing? OBJECT_COLOR : GRID_COLOR;
       $(selector.join(', ')).css('background-color',color);
     }
+  },
+  'mouseup .gameboard-container, mouseleave .gameboard-container': function(e, template){
+    var isDrawing = template.isDrawing.get();
+    var isErasing = template.isErasing.get();
+    if(isDrawing || isErasing)
+      saveGameboard();
   },
   'mousedown #brush': function(e, template){
     template.isDrawing.set(!template.isDrawing.get());
@@ -58,4 +73,14 @@ Template.Gameboard.helpers({
     return Template.instance().columns.get()[row];
   },
 });
+
+var saveGameboard = function(){
+  var board = $('.gameboard-table')[0];
+  var data = '';
+  for(var i=0;i<board.rows.length;i++){
+    for(var j=0;j<board.rows[i].cells.length;j++){
+      data+=board.rows[i].cells[j].style.backgroundColor==GRID_COLOR_RGB?'1':'0';
+    }
+  }
+}
 
