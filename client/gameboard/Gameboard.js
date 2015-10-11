@@ -16,11 +16,13 @@ Template.Gameboard.onCreated(function(){
   self.columns = new ReactiveVar(null);
   self._id = currentGameId;
   self.isEditing = new ReactiveVar(isEditing);
+  self.name = new ReactiveVar('');
 
   self.subscribe('singleGameData', currentGameId, function(){
     var rows = [];
     var columns = [];
-    var gameData = Games.findOne(self._id).data;
+    var game = Games.findOne(self._id);
+    var gameData = game.data;
     var count = 0;
     for(var i=0; i<GRID_SIZE; i++){
       rows.push(i);
@@ -37,6 +39,7 @@ Template.Gameboard.onCreated(function(){
     }
     self.rows.set(rows);
     self.columns.set(columns);
+    self.name.set(game.name)
     $('body').on('mouseup',function(){self.isMouseDown.set(false)});
     $('body').on('mousedown',function(){self.isMouseDown.set(true)});
   });

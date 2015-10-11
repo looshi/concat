@@ -1,5 +1,5 @@
 <template name="Gameboard">
-
+  <h3>{{instance.name.get}}</h3>
   <div class='gameboard-container {{#if instance.isDrawing.get}}is-drawing{{/if}} {{#if instance.isErasing.get}}is-erasing{{/if}}'>
     {{#if instance.isEditing.get}}
       <button
