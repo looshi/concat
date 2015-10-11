@@ -1,9 +1,13 @@
 <template name="Gameboard">
-  <table class='gameboard-table'>
+  Gameboard
+  <table class='gameboard-table' cellspacing='0'>
     {{#each rows}}
       <tr class='gameboard-row'>
-        {{#each columns}}
-          <td class='gameboard-column'></td>
+        {{#each cell this}}
+          <td
+          id='cell-{{row}}-{{column}}'
+          class='gameboard-cell'
+          style='background-color:{{color}};'></td>
         {{/each}}
       </tr>
     {{/each}}
