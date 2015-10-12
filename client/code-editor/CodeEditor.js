@@ -8,13 +8,15 @@ Template.CodeEditor.onCreated(function(){
   POS = {x: CAT_START_X, y: CAT_START_Y};
   Session.set('editorCode', null);
   var currentGameId = FlowRouter.current().params.gameId;
+  var isEditing = FlowRouter.current().params.isEditing==='edit'?true:false;
   var self = this;
   self.game = new ReactiveVar(null);
   self.error = new ReactiveVar(false);
+  self.isEditing = isEditing;
   self.subscribe('singleGameData', currentGameId, function(){
     var game = Games.findOne(currentGameId);
     self.game.set(game);
-    if(game && game.solution)
+    if(game && game.solution && isEditing)
       Session.set('editorCode', game.solution);
   });
   addMoveFunctions();
@@ -25,10 +27,15 @@ Template.CodeEditor.onDestroyed(function(){
 });
 
 Template.CodeEditor.events({
+  'click #show-solution': function(e, template){
+    Session.set('editorCode', template.game.get().solution);
+  },
   'keyup .CodeMirror': function(e, template) {
-    var code = $("#editor").val();
-    var _id = template.game.get()._id;
-    debounceSave(_id, code);
+    if(template.isEditing){
+      var code = $("#editor").val();
+      var _id = template.game.get()._id;
+      debounceSave(_id, code, template);
+    }
   },
   'click #run' : function(e, template){
     var code = $("#editor").val();
@@ -41,8 +48,8 @@ Template.CodeEditor.events({
     clearAllTimeouts();
     try{
       $('body').trigger('reset');
-      POS.x = CAT_START_X;
-      POS.y = CAT_START_Y;
+      POS.x = Games.findOne(template.game.get()._id).start.x;
+      POS.y = Games.findOne(template.game.get()._id).start.y;
       eval(code);
       template.error.set('Script ran successfully.');
     }catch(err){
@@ -97,18 +104,15 @@ var addMoveFunctions = function(){
   }
 }
 
-
 var drawCell = function(x, y, TIMER){
   setTimeout(function(){
     var board = $('.gameboard-table')[0];
     var cell = board.rows[y].cells[x];
     if(cell.style.backgroundColor === OBJECT_COLOR_RGB){
-      console.log("Fail!");
       board.rows[y].cells[x].style.backgroundColor = ERROR_COLOR_RGB;
     }else{
       board.rows[y].cells[x].style.backgroundColor = CAT_COLOR_RGB;
     }
-
   }, TIMER*10);
 }
 
@@ -131,13 +135,12 @@ Template.CodeEditor.helpers({
   }
 });
 
-var debounceSave = _.debounce(function(id, code) {
-  console.log('db', code);
+var debounceSave = _.debounce(function(id, code, template) {
   Meteor.call('SaveGameSolution', id, code, function(err, res){
     if(err){
       console.warn('solution save error', err);
     }else{
-      console.log('solution saved.')
+      template.error.set('Solution saved.');
     }
   })
 },300);

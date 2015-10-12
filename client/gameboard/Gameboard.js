@@ -14,6 +14,7 @@ Template.Gameboard.onCreated(function(){
   self.name = new ReactiveVar('');
   self.gameData = new ReactiveVar(null);
   self.brushSize = new ReactiveVar(4);
+  self.start = new ReactiveVar(null);
 
   self.subscribe('singleGameData', currentGameId, function(){
     var game = Games.findOne(self._id);
@@ -22,6 +23,7 @@ Template.Gameboard.onCreated(function(){
     self.columns.set(board.columns);
     self.name.set(game.name);
     self.gameData.set(game.data);
+    self.start.set(game.start);
     $('body').on('mouseup',function(){self.isMouseDown.set(false)});
     $('body').on('mousedown',function(){self.isMouseDown.set(true)});
     $('body').on('reset', function(){resetBoard(self)});
@@ -59,7 +61,6 @@ Template.Gameboard.events({
       saveGameboard(template._id, template);
   },
   'mousedown #brush': function(e, template){
-    console.log('brush',template);
     template.isDrawing.set(!template.isDrawing.get());
     template.isErasing.set(false);
   },
@@ -68,8 +69,20 @@ Template.Gameboard.events({
     template.isDrawing.set(false);
   },
   'change #brush-size' : function(e, template) {
-      var selected = $('#brush-size option:selected').val();
-      template.brushSize.set(selected);
+    var selected = $('#brush-size option:selected').val();
+    template.brushSize.set(selected);
+  },
+  'change #startX, change #startY' : function(e, template) {
+    var x = $('#startX').val();
+    var y = $('#startY').val();
+    Meteor.call('SaveGameStartPoint',template._id, x, y, function(err, res){
+      if(err){
+
+      }else{
+        var game = Games.findOne(template._id);
+        template.start.set(game.start);
+      }
+    });
   }
 })
 
@@ -99,9 +112,7 @@ var saveGameboard = function(_id, template){
   }
   Meteor.call('SaveGameData', _id, data, function(err,res){
     if(err){
-      console.warn('error saving game',err);
     }else{
-       console.log('Game saved!', res);
        template.gameData.set(data);
     }
   })

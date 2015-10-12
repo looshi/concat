@@ -2,6 +2,14 @@
   <h3>{{instance.name.get}}</h3>
   <div class='gameboard-container {{#if instance.isDrawing.get}}is-drawing{{/if}} {{#if instance.isErasing.get}}is-erasing{{/if}}'>
     {{#if instance.isEditing.get}}
+
+      {{#with instance.start.get}}
+        <div>
+          <label>Start X: <input maxlength="2" type="number" id="startX" value='{{x}}' /></label>
+          <label>Start Y: <input maxlength="2" type="number" id="startY" value='{{y}}' /></label>
+        </div>
+      {{/with}}
+
       <button
       class='pure-button {{#if instance.isDrawing.get}}active-control{{/if}}'
       id='brush'><i class="fa fa-pencil"></i> <div class='object-color'></div></button>
@@ -15,6 +23,7 @@
           <option value="4" selected>4</option>
           <option value="6">6</option>
         </select>
+
     {{/if}}
     <table class='gameboard-table {{#if isEditingBoard}}active-control{{/if}}' cellspacing='0'>
       {{#each instance.rows.get}}
