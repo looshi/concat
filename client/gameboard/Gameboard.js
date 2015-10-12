@@ -48,7 +48,7 @@ Template.Gameboard.events({
         selector.push('#cell-'+this.row+'-'+this.column);
       }
 
-      var color = isDrawing? OBJECT_COLOR : GRID_COLOR;
+      var color = isDrawing? OBJECT_COLOR_RGB : GRID_COLOR_RGB;
       $(selector.join(', ')).css('background-color',color);
     }
   },
@@ -90,7 +90,7 @@ var saveGameboard = function(_id, template){
   for(var i=0;i<board.rows.length;i++){
     for(var j=0;j<board.rows[i].cells.length;j++){
       color =  board.rows[i].cells[j].style.backgroundColor;
-      if(color==ERROR_COLOR_RGB || color==OBJECT_COLOR || color==OBJECT_COLOR_RGB){
+      if(color==ERROR_COLOR_RGB || color==OBJECT_COLOR_RGB || color==OBJECT_COLOR_RGB){
         data+='0';
       }else{
         data+='1';
@@ -132,7 +132,7 @@ var drawCells = function(gameData){
         var cell={
           row: i,
           column: j,
-          color: gameData.charAt(count)==='0' ? OBJECT_COLOR : GRID_COLOR
+          color: gameData.charAt(count)==='0' ? OBJECT_COLOR_RGB : GRID_COLOR_RGB
         }
         columns[i][j] = cell;
         count = count + 1;
